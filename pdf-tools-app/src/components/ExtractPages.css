@@ -1,0 +1,48 @@
+.extract-container {
+    text-align: center;
+    padding: 50px;
+    background: linear-gradient(135deg, #ff9a9e, #fad0c4);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: black;
+  }
+  
+  .extract-container input {
+    margin: 10px 0;
+    padding: 10px;
+    border-radius: 5px;
+    width: 60%;
+    text-align: center;
+  }
+  
+  .extract-container button {
+    background: #ff416c;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 10px;
+  }
+  
+  .extract-container button:hover {
+    background: #ff4b2b;
+  }
+  
+  .extract-container a {
+    margin-top: 20px;
+    display: inline-block;
+    background: #00c6ff;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 5px;
+    text-decoration: none;
+  }
+  
+  .extract-container a:hover {
+    background: #0072ff;
+  }
+  
