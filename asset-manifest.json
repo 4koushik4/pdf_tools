@@ -1,0 +1,20 @@
+{
+  "files": {
+    "main.css": "/4koushik4/pdf_tools.git/static/css/main.76a7a561.css",
+    "main.js": "/4koushik4/pdf_tools.git/static/js/main.21ddae19.js",
+    "static/js/239.19858568.chunk.js": "/4koushik4/pdf_tools.git/static/js/239.19858568.chunk.js",
+    "static/js/977.0146fff7.chunk.js": "/4koushik4/pdf_tools.git/static/js/977.0146fff7.chunk.js",
+    "static/js/732.8c9cf6f5.chunk.js": "/4koushik4/pdf_tools.git/static/js/732.8c9cf6f5.chunk.js",
+    "static/js/453.075c65ab.chunk.js": "/4koushik4/pdf_tools.git/static/js/453.075c65ab.chunk.js",
+    "index.html": "/4koushik4/pdf_tools.git/index.html",
+    "main.76a7a561.css.map": "/4koushik4/pdf_tools.git/static/css/main.76a7a561.css.map",
+    "main.21ddae19.js.map": "/4koushik4/pdf_tools.git/static/js/main.21ddae19.js.map",
+    "239.19858568.chunk.js.map": "/4koushik4/pdf_tools.git/static/js/239.19858568.chunk.js.map",
+    "732.8c9cf6f5.chunk.js.map": "/4koushik4/pdf_tools.git/static/js/732.8c9cf6f5.chunk.js.map",
+    "453.075c65ab.chunk.js.map": "/4koushik4/pdf_tools.git/static/js/453.075c65ab.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.76a7a561.css",
+    "static/js/main.21ddae19.js"
+  ]
+}
