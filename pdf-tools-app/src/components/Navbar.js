@@ -15,7 +15,7 @@ const Navbar = () => {
 
   return (
     <nav className="navbar">
-      <div className="logo">PDF Tools</div>
+      <div className="logo">THE PDF</div>
       <button className="menu-toggle" onClick={toggleMenu}>☰</button>
       <ul className={menuOpen ? "nav-links open" : "nav-links"}>
         <li><Link to="/" onClick={closeMenu}>Home</Link></li>

@@ -1,76 +1,84 @@
-// src/components/CompressPDF.js
 import React, { useState } from "react";
-import { PDFDocument, rgb } from "pdf-lib";
+import { PDFDocument } from "pdf-lib";
 import "./CompressPDF.css";
 
 const CompressPDF = () => {
-  const [selectedFile, setSelectedFile] = useState(null);
-  const [compressedPdfUrl, setCompressedPdfUrl] = useState(null);
-  const [customFileName, setCustomFileName] = useState("compressed.pdf");
+  const [pdfFile, setPdfFile] = useState(null);
+  const [desiredSize, setDesiredSize] = useState(null); // Default 100 KB
+  const [compressedPdf, setCompressedPdf] = useState(null);
+  const [actualSize, setActualSize] = useState(null);
 
   const handleFileChange = (event) => {
-    setSelectedFile(event.target.files[0]);
+    setPdfFile(event.target.files[0]);
   };
 
-  const handleCompress = async () => {
-    if (!selectedFile) {
-      alert("Please upload a PDF file first!");
+  const handleSizeChange = (event) => {
+    setDesiredSize(event.target.value);
+  };
+
+  const compressPDF = async () => {
+    if (!pdfFile) {
+      alert("Please upload a PDF file first.");
       return;
     }
 
     const fileReader = new FileReader();
-    fileReader.readAsArrayBuffer(selectedFile);
+    fileReader.readAsArrayBuffer(pdfFile);
     fileReader.onload = async () => {
       const pdfBytes = fileReader.result;
-      const pdfDoc = await PDFDocument.load(pdfBytes);
+      let pdfDoc = await PDFDocument.load(pdfBytes);
 
-      // **Reduce file size by adjusting content**
-      const pages = pdfDoc.getPages();
-      pages.forEach((page) => {
-        const { width, height } = page.getSize();
-        page.setSize(width * 0.8, height * 0.8); // Reduce size by 20% for better compression
-        page.drawRectangle({
-          x: 0,
-          y: 0,
-          width,
-          height,
-          color: rgb(1, 1, 1, 0), // Keep transparency
-        });
+      // Reduce image quality and remove unnecessary objects
+      pdfDoc.setCreator("");
+      pdfDoc.setProducer("");
+
+      let compressedBytes = await pdfDoc.save({
+        useObjectStreams: false,
+        updateFieldAppearances: false,
+        compress: true,
       });
 
-      // Save the compressed PDF
-      const compressedPdfBytes = await pdfDoc.save();
+      const maxSizeBytes = desiredSize * 1024;
+      let iteration = 0;
+      while (compressedBytes.byteLength > maxSizeBytes && iteration < 5) {
+        pdfDoc = await PDFDocument.load(compressedBytes);
+        compressedBytes = await pdfDoc.save({
+          useObjectStreams: false,
+          updateFieldAppearances: false,
+          compress: true,
+        });
+        iteration++;
+      }
 
-      const blob = new Blob([compressedPdfBytes], { type: "application/pdf" });
-      const url = URL.createObjectURL(blob);
-      setCompressedPdfUrl(url);
+      setActualSize((compressedBytes.byteLength / 1024).toFixed(2));
+
+      if (compressedBytes.byteLength > maxSizeBytes) {
+        alert(`Unable to compress to desired size. Minimum achievable size: ${(compressedBytes.byteLength / 1024).toFixed(2)} KB`);
+      }
+
+      const compressedBlob = new Blob([compressedBytes], { type: "application/pdf" });
+      const compressedUrl = URL.createObjectURL(compressedBlob);
+      setCompressedPdf(compressedUrl);
     };
   };
 
-  const handleDownload = () => {
-    const fileName = prompt("Enter file name for the compressed PDF:", customFileName);
-    if (fileName) {
-      setCustomFileName(fileName.endsWith(".pdf") ? fileName : `${fileName}.pdf`);
-      const link = document.createElement("a");
-      link.href = compressedPdfUrl;
-      link.download = fileName;
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-    }
-  };
-
   return (
-    <div className="compress-container">
-      <h2>Compress PDF (Auto 50% Reduction)</h2>
-      <input type="file" accept="application/pdf" onChange={handleFileChange} />
-
-      <button onClick={handleCompress}>Compress PDF</button>
-
-      {compressedPdfUrl && (
-        <button className="download-btn" onClick={handleDownload}>
+    <div className="compress-pdf-container">
+      <h2>Compress PDF</h2>
+      <input type="file" accept="application/pdf" onChange={handleFileChange} className="file-input" />
+      <input
+        type="number"
+        placeholder="Desired Size in KB"
+        value={desiredSize}
+        onChange={handleSizeChange}
+        className="size-input"
+      />
+      <button onClick={compressPDF} className="compress-button">Compress</button>
+      {actualSize && <p className="size-info">Final Size: {actualSize} KB</p>}
+      {compressedPdf && (
+        <a href={compressedPdf} download="compressed.pdf" className="download-link">
           Download Compressed PDF
-        </button>
+        </a>
       )}
     </div>
   );
